@@ -27,7 +27,7 @@ group :test, :development do
 end
 
 group :test do
-	gem 'cucumber-rails'
+	gem 'cucumber-rails', :require => false
 	gem "cucumber-rails-training-wheels", :group => :test
 	gem 'capybara'
 	gem 'database_cleaner'
@@ -35,6 +35,7 @@ group :test do
 end
 
 gem 'dynamic_form'
+gem 'devise', '~> 1.4.3'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
