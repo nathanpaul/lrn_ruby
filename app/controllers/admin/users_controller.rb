@@ -1,5 +1,7 @@
 class Admin::UsersController < Admin::BaseController
 	before_filter :authorize_admin!
+	before_filter :find_user, :only => [:show, :edit, :update, :destroy]
+
   def index
   	@users = User.all(:order => "email")
   end
@@ -11,7 +13,7 @@ class Admin::UsersController < Admin::BaseController
   def create
   	#can't create dupe, need to set :admin and other protected attributes outside of the "new" method.
 	@user = User.new(params[:user].except(:admin))
-	@user.admin = params[:user][:admin] == "1"
+	set_admin
 		if @user.save
 		  flash[:notice] = "User has been created."
 		  redirect_to admin_users_path
@@ -20,4 +22,40 @@ class Admin::UsersController < Admin::BaseController
 		  render :action => "new"
 		end
 	end
+
+	def show
+
+	end
+
+	def edit
+
+	end
+
+	def find_user
+		@user = User.find(params[:id])
+	end
+
+
+    def update
+
+        if params[:user][:password].blank?
+        	params[:user].delete(:password)
+        	params[:user].delete(:password_confirmation)
+        end
+
+        set_admin
+        if @user.update_attributes(params[:user].except(:admin))
+          flash[:notice] = "User has been updated."
+          redirect_to admin_users_path
+        else
+          flash[:alert] = "User has not been updated."
+          render :action => "edit"
+        end
+	end
+
+	def set_admin
+	  @user.admin = params[:user][:admin] == "1"
+	end
+
+	private :find_user, :set_admin
 end
